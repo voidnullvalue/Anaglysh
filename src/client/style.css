@@ -1,0 +1,279 @@
+@import '@xterm/xterm/css/xterm.css';
+
+:root {
+  --bg: #050608;
+  --panel: rgba(10, 12, 18, 0.82);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text: rgba(235, 245, 255, 0.92);
+  --muted: rgba(235, 245, 255, 0.58);
+  --red: #ff293a;
+  --cyan: #24f7ff;
+  --depth-px: 5px;
+  --red-x: 5px;
+  --cyan-x: -5px;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --warp: 1;
+  --shake-x: 0px;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 41, 58, 0.13), transparent 26%),
+    radial-gradient(circle at 70% 70%, rgba(36, 247, 255, 0.10), transparent 26%),
+    var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  padding: 12px;
+}
+
+.chrome,
+.helpbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.30);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.badge {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: black;
+  font-weight: 900;
+  font-size: 22px;
+  background: linear-gradient(90deg, var(--red), var(--cyan));
+  box-shadow: -3px 0 0 rgba(255, 41, 58, 0.7), 3px 0 0 rgba(36, 247, 255, 0.7);
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brand p {
+  margin: 1px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+select,
+input[type="range"] {
+  accent-color: var(--cyan);
+}
+
+select {
+  color: var(--text);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.rangeLabel input { width: 160px; }
+
+#depthReadout {
+  display: inline-block;
+  min-width: 2ch;
+  color: var(--text);
+}
+
+.status {
+  min-width: 190px;
+  text-align: right;
+  font: 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--muted);
+}
+
+.status.connected { color: var(--cyan); }
+.status.bad { color: var(--red); }
+
+.stage {
+  min-height: 0;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.terminal-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 18px;
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 50%, rgba(0,0,0,0.09) 50%) 0 0 / 100% 4px,
+    radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 58%),
+    #020305;
+  box-shadow:
+    0 28px 90px rgba(0,0,0,0.42),
+    inset 0 0 80px rgba(36, 247, 255, 0.05),
+    inset 0 0 80px rgba(255, 41, 58, 0.05);
+  transform:
+    translateX(var(--shake-x))
+    rotateX(calc(var(--tilt-x) * var(--warp)))
+    rotateY(calc(var(--tilt-y) * var(--warp)));
+  transform-origin: center;
+  transition: transform 130ms ease, filter 160ms ease;
+}
+
+.term-layer {
+  position: absolute;
+  inset: 16px;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  will-change: transform, filter, opacity;
+}
+
+.red-layer {
+  transform: translateX(var(--red-x));
+  opacity: 0.82;
+  filter: saturate(1.2) drop-shadow(1px 0 9px rgba(255, 41, 58, 0.24));
+  z-index: 2;
+}
+
+.cyan-layer {
+  transform: translateX(var(--cyan-x));
+  opacity: 0.78;
+  filter: saturate(1.1) drop-shadow(-1px 0 9px rgba(36, 247, 255, 0.24));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.term-layer .xterm {
+  height: 100%;
+  padding: 0;
+}
+
+.term-layer .xterm-viewport,
+.term-layer .xterm-screen {
+  background: transparent !important;
+}
+
+.red-layer .xterm-cursor-layer,
+.red-layer .xterm-selection-layer { opacity: 0.92; }
+.cyan-layer .xterm-cursor-layer,
+.cyan-layer .xterm-selection-layer { opacity: 0.55; }
+
+.depth-hud {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 5;
+  width: 220px;
+  padding: 10px;
+  border: 1px solid rgba(36, 247, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(0, 8, 12, 0.54);
+  color: rgba(230, 255, 255, 0.86);
+  font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  pointer-events: none;
+  box-shadow:
+    -2px 0 0 rgba(255, 41, 58, 0.35),
+    2px 0 0 rgba(36, 247, 255, 0.35),
+    0 0 30px rgba(36, 247, 255, 0.10);
+}
+
+.depth-hud.hidden { display: none; }
+
+.hud-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.hud-line span { color: rgba(230, 255, 255, 0.48); }
+.hud-line strong { overflow: hidden; text-overflow: ellipsis; }
+
+.helpbar {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.7em;
+  margin: 0 1px;
+  padding: 2px 5px;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  color: var(--text);
+  background: rgba(255,255,255,0.07);
+  font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-align: center;
+}
+
+code {
+  color: rgba(255,255,255,0.86);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@keyframes chromaShake {
+  0%, 100% { --shake-x: 0px; }
+  20% { --shake-x: -4px; }
+  40% { --shake-x: 5px; }
+  60% { --shake-x: -3px; }
+  80% { --shake-x: 3px; }
+}
+
+.terminal-shell.shake {
+  animation: chromaShake 240ms linear 0s 3;
+}
+
+@media (max-width: 800px) {
+  #app { padding: 8px; }
+  .chrome { align-items: flex-start; flex-direction: column; }
+  .status { text-align: left; }
+  .term-layer { inset: 10px; }
+  .depth-hud { display: none; }
+}

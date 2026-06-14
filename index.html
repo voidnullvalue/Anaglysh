@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anaglysh</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="chrome">
+        <div class="brand">
+          <div class="badge">A</div>
+          <div>
+            <h1>Anaglysh</h1>
+            <p>red/cyan terminal abuse</p>
+          </div>
+        </div>
+
+        <div class="controls" aria-label="terminal anaglyph controls">
+          <label>
+            mode
+            <select id="modeSelect">
+              <option value="usable">usable</option>
+              <option value="stupid" selected>stupid</option>
+              <option value="migraine">migraine</option>
+              <option value="gitcrime">git crime</option>
+            </select>
+          </label>
+
+          <label class="rangeLabel">
+            depth
+            <input id="depthSlider" type="range" min="0" max="18" value="5" />
+            <span id="depthReadout">5</span>
+          </label>
+
+          <label>
+            eyes
+            <select id="eyeSelect">
+              <option value="standard" selected>red left</option>
+              <option value="swapped">cyan left</option>
+            </select>
+          </label>
+
+          <label class="checkLabel">
+            <input id="warpToggle" type="checkbox" checked /> warp
+          </label>
+
+          <label class="checkLabel">
+            <input id="hudToggle" type="checkbox" checked /> HUD
+          </label>
+        </div>
+
+        <div id="status" class="status">connecting</div>
+      </header>
+
+      <main id="stage" class="stage">
+        <div id="terminalShell" class="terminal-shell">
+          <div id="term-red" class="term-layer red-layer" aria-label="red terminal layer"></div>
+          <div id="term-cyan" class="term-layer cyan-layer" aria-label="cyan terminal layer"></div>
+          <div id="depthHud" class="depth-hud">
+            <div class="hud-line"><span>backend</span><strong id="backendReadout">?</strong></div>
+            <div class="hud-line"><span>shell</span><strong id="shellReadout">?</strong></div>
+            <div class="hud-line"><span>rule</span><strong id="ruleReadout">none</strong></div>
+            <div class="hud-line"><span>eyes</span><strong id="eyeReadout">red left</strong></div>
+            <div class="hud-line"><span>osc</span><strong>8377</strong></div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="helpbar">
+        <span><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>+</kbd> more depth</span>
+        <span><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>-</kbd> less depth</span>
+        <span><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>M</kbd> mode</span>
+        <span><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> swap eyes</span>
+        <span>try: <code>depthctl flash 16</code>, <code>depthctl mode migraine</code>, <code>depthctl eyes swapped</code></span>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/client/main.js"></script>
+  </body>
+</html>

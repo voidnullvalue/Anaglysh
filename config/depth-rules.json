@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "osc": 8377,
+  "rules": [
+    {
+      "name": "sudo jumpscare",
+      "pattern": "\\[sudo\\] password|sudo:",
+      "flags": "i",
+      "depth": 14,
+      "durationMs": 1200,
+      "shake": true
+    },
+    {
+      "name": "error accusation layer",
+      "pattern": "\\b(ERROR|FATAL|Traceback|Exception|Segmentation fault)\\b",
+      "flags": "i",
+      "depth": 10,
+      "durationMs": 1500,
+      "shake": false
+    },
+    {
+      "name": "warning shelf",
+      "pattern": "\\b(WARN|WARNING|deprecated)\\b",
+      "flags": "i",
+      "depth": 5,
+      "durationMs": 900,
+      "shake": false
+    },
+    {
+      "name": "git crime",
+      "pattern": "git push --force|--force-with-lease|rebase|merge conflict|<<<<<<<|>>>>>>>|=======" ,
+      "flags": "i",
+      "depth": 12,
+      "durationMs": 1400,
+      "shake": true
+    },
+    {
+      "name": "filesystem felony",
+      "pattern": "rm -rf|mkfs|dd if=|chmod -R 777|chown -R",
+      "flags": "i",
+      "depth": 16,
+      "durationMs": 1600,
+      "shake": true
+    }
+  ]
+}

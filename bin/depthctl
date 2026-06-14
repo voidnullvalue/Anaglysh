@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+'use strict';
+
+const OSC = 8377;
+const BEL = '\x07';
+
+function osc(payload) {
+  process.stdout.write(`\x1b]${OSC};${payload}${BEL}`);
+}
+
+function usage(code = 0) {
+  const text = `depthctl - control Anaglysh from inside the terminal\n\nUsage:\n  depthctl set <0-24>          Set steady anaglyph separation\n  depthctl flash <0-24>        Briefly shove output into your face\n  depthctl mode <name>         usable | stupid | migraine | gitcrime\n  depthctl warp <on|off>       Toggle perspective warp\n  depthctl banner <text...>    Print an anaglysh banner\n\nExamples:\n  depthctl flash 16\n  depthctl mode migraine\n  depthctl set 3\n`;
+  process.stderr.write(text);
+  process.exit(code);
+}
+
+const [cmd, ...rest] = process.argv.slice(2);
+if (!cmd || cmd === '-h' || cmd === '--help') usage(0);
+
+switch (cmd) {
+  case 'set': {
+    const n = Number(rest[0]);
+    if (!Number.isFinite(n)) usage(2);
+    osc(`depth=${Math.max(0, Math.min(24, n))}`);
+    break;
+  }
+  case 'flash': {
+    const n = Number(rest[0]);
+    if (!Number.isFinite(n)) usage(2);
+    osc(`flash=${Math.max(0, Math.min(24, n))}`);
+    break;
+  }
+  case 'mode': {
+    const mode = rest[0];
+    if (!mode) usage(2);
+    osc(`mode=${mode}`);
+    break;
+  }
+  case 'warp': {
+    const value = String(rest[0] || '').toLowerCase();
+    if (!['on', 'off', '1', '0', 'true', 'false'].includes(value)) usage(2);
+    osc(`warp=${['on', '1', 'true'].includes(value) ? 'on' : 'off'}`);
+    break;
+  }
+  case 'eyes': {
+    const value = String(rest[0] || '').toLowerCase();
+    if (!['standard', 'normal', 'red-left', 'redleft', 'swapped', 'swap', 'cyan-left', 'cyanleft'].includes(value)) usage(2);
+    const order = ['swapped', 'swap', 'cyan-left', 'cyanleft'].includes(value) ? 'swapped' : 'standard';
+    osc(`eyes=${order}`);
+    break;
+  }
+  case 'banner': {
+    osc(`banner=${rest.join(' ')}`);
+    break;
+  }
+  default:
+    usage(2);
+}
