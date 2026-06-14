@@ -4,6 +4,10 @@ A red/cyan anaglyph terminal emulator nobody asked for.
 
 It is intentionally stupid, but it is not fake: it uses a PTY backend, xterm.js for terminal emulation, and two chromatically shifted render layers to make your shell look like it fell out of a 1950s sci-fi cereal box.
 
+## Screenshot
+
+![Anaglysh terminal running with red/cyan anaglyph rendering](docs/assets/anaglysh-screenshot.png)
+
 ## What it does
 
 - Runs your real shell through `node-pty`.
